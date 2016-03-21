@@ -1,0 +1,51 @@
+<?php
+/**
+ * @file
+ * Code for the Open Atrium Webform feature.
+ */
+
+include_once 'oa_webform.features.inc';
+
+/**
+ * Implements hook_form_alter() for 'webform_component_edit_form'.
+ */
+function oa_webform_form_webform_component_edit_form_alter(&$form, &$form_state) {
+  $honeypot = variable_get('honeypot_element_name', 'url');
+  if ($honeypot) {
+    $form['form_key']['#description'] .= '<strong>'
+      . t(' May not use the honeypot value "%honeypot".', array(
+        '%honeypot' => $honeypot,
+      ))
+      . '</strong>';
+  }
+  $form['#validate'][] = 'oa_webform_honeypot_id_validate';
+}
+
+/**
+ * Validate handler for webform_component_form() when adding a new component.
+ */
+function oa_webform_honeypot_id_validate($form, &$form_state) {
+  // Check that the entered component name is not a match for the "honeypot_element_name"
+  $honeypot = variable_get('honeypot_element_name', 'url');
+  if ($form_state['values']['form_key'] == $honeypot) {
+    form_error($form['form_key'], t('When adding a new component, the name field must not match the honeypot security field "%honeypot".',
+      array(
+        '%honeypot' => $honeypot,
+      )
+    ));
+  }
+}
+
+/**
+ * Implements hook_form_alter() for node edit forms
+ */
+function oa_webform_form_webform_node_form_alter(&$form, &$form_state, $form_id) {
+  _oa_core_hide_comment_settings($form);
+}
+
+/**
+ * Implements hook_oa_related_allowed_default().
+ */
+function oa_webform_oa_related_allowed_default() {
+  return array('webform');
+}
