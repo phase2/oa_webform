@@ -20,10 +20,3 @@ it blocks the form submission, acting as a low-impact CAPTCHA that users never s
 Validation is in place to avoid conflicts for new webform components matching
 the currently configured honeypot element, which at the time of this writing is
 `url`.
-
-## Todos
-
-* Add panelizer settings after the fashion of OA Events or OA Wiki.
-* Check on general appearance of form elements.
-* Check on general appearance of webform submissions.
-* Configure honeypot.
